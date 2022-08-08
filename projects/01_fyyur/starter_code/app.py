@@ -379,7 +379,7 @@ def edit_artist_submission(artist_id):
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
   v=Venue.query.get(venue_id)
-  form = VenueForm(obj=venue)
+  form = VenueForm(obj=v)
   v={
     'id': v.id, 
     'name': v.name,
@@ -513,7 +513,7 @@ def create_show_submission():
     flash('An error occurred. Show ' + Show.name + ' could not be listed.')
   finally: 
    db.session.close()
-   
+
   return render_template('pages/home.html')
 
 @app.errorhandler(404)
