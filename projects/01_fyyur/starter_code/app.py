@@ -76,7 +76,7 @@ class Artist(db.Model):
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 class Show(db.Model):
-   _tablename__ = 'show'
+   _tablename__ = 'Show'
 
    id = db.Column(db.Integer, primary_key=True)
    start_time = db.Column(db.DateTime, nullable=False)
@@ -130,7 +130,7 @@ def venues():
           'state': i.state,
           'venues': [{'id': v.id, 'name':v.name}]      
     })
-    return render_template('pages/venues.html', areas=data);
+    return render_template('pages/venues.html', areas=data)
 
      
 
@@ -238,6 +238,8 @@ def delete_venue(venue_id):
   finally:
     db.session.close()
   return jsonify({'success':True})
+  
+  return None
 
   # TODO: Complete this endpoint for taking a venue_id, and using
   # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
@@ -250,7 +252,7 @@ def delete_venue(venue_id):
 @app.route('/artists')
 def artists():
   # TODO: replace with real data returned from querying the database
-  data=Artist.query.All()
+  data=Artist.query.all()
 
   return render_template('pages/artists.html', artists=data)
 
