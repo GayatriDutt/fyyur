@@ -13,15 +13,14 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
-from models import *
+from models import db, Artist, Venue, Show
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://gayatri:1234@localhost:5432/fyyur'
+app.config.from_object("config")
 moment = Moment(app)
-app.config.from_object('config')
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -74,6 +73,8 @@ def venues():
           'state': i.state,
           'venues': [{'id': v.id, 'name':v.name}]      
     })
+
+    
     return render_template('pages/venues.html', areas=data)
 
      
