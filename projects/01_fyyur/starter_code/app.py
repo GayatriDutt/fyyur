@@ -14,6 +14,7 @@ from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
 from models import db, Artist, Venue, Show
+from sqlalchemy import func
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -59,22 +60,25 @@ def venues():
   # TODO: replace with real venues data.
   #       num_upcoming_shows should be aggregated based on number of upcoming shows per venue.
   data =[]
-  venues = Venue.query.all()
-  a = Venue.query.distinct(Venue.city,Venue.state).all()
-  for i in a:
-    list_of_venues = []
-    for v in venues:
-      if v.city == i.city and v.state == i.state:
-         list_of_venues.append({
-           'id': v.id, 
-           'name':v.name})
-         data.append({
-          'city' : i.city,
-          'state': i.state,
-          'venues': [{'id': v.id, 'name':v.name}]      
-    })
+  venues = Venue.query.with_entities(func.count(Venue.id),Venue.city, Venue.state).group_by(Venue.city, Venue.state).all()
+  area_data =[]
+  for i in venues:
+    areas = Venue.query.filter_by(state=i.state).filter_by(city=i.city).all()
+    for a in areas:
+      
+      area_data.append({
+        "id": a.id,
+        "name": a.name,
+        
 
-    
+      })
+    data.append({
+        "city": i.city,
+        "state": i.state,
+        "venues": area_data
+      })
+
+
     return render_template('pages/venues.html', areas=data)
 
      
